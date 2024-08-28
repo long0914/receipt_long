@@ -1,0 +1,14 @@
+.newPostContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #a4c372; /* Mild color */
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.newPostForm {
+  width: 100%;
+  max-width: 600px;
+}

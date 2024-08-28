@@ -1,0 +1,21 @@
+.postList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.postList > .newPostContainer {
+  flex: 1 1 100%; /* Full width */
+  background-color: #f5f5f5; /* Mild color */
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.postList > div {
+  flex: 1 1 calc(25% - 10px); /* 4 items per row */
+  background-color: #ff6347; /* Vibrant color */
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 8px;
+}
