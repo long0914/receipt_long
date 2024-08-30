@@ -1,10 +1,14 @@
+/* Post.module.css */
+
 .post {
-  background-color: #f0f0f0;
-  padding: 20px;
-  border-radius: 8px;
+  background-color: rgb(31, 172, 219); /* Set the background color */
+  padding: 10px;
+  border-radius: 5px;
+  width: 150px; /* Set a minimum width to prevent the post block from becoming too small */
 }
 
 .post p {
   font-size: 16px;
-  color: #333;
+  color: #010201;
+  
 }

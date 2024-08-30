@@ -1,28 +1,42 @@
-import { useState } from 'react';
+//import { useState } from 'react';
 import styles from './NewPost.module.css';
+import { useState } from 'react';
 
-function NewPost() {
-  const [body, setBody] = useState('');
+function NewPost(props) {
+  const [author, setAuthor] = useState('');
+  const [coauthor, setCoauthor] = useState('');
 
-  function bodyChangeHandler(event) {
-    setBody(event.target.value); //declare a function that sets the body state to the value of the event target // dont know what event.target.value is
-  } 
+  const authorChangeHandler = (event) => {
+    setAuthor(event.target.value);
+    props.onNameChange(event);
+  };
 
-  const bodyData = body;
-  
+  const coauthorChangeHandler = (event) => {
+    setCoauthor(event.target.value);
+    props.onMsgChange(event);
+  };
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+    const postData = {
+      name: event.target.name.value,
+      body: event.target.body.value
+    };
+    props.onSubmit(postData);
+  };
 
   return (
-    <div className={styles.newPostContainer}>
-      <form className={styles.newPostForm}>
+    <div className={styles.newPostContainer} >
+      <form className={styles.newPostForm} onSubmit={onSubmitHandler}>
         <p>
           <label htmlFor="body">Text</label>
-          <textarea name="body" id="body" required rows={3} onChange={bodyChangeHandler}/>
+          <textarea name="body" id="body" required rows={3} onChange={coauthorChangeHandler}/>
         </p>
-        <p>{bodyData}</p>
+        
         <p>
           <label htmlFor="name">Your name</label>
-          <input type="text" id="name" required />
+          <input type="text" id="name" required onChange={authorChangeHandler}/>
         </p>
+        <button type="submit">Submit</button>
       </form>
     </div>
   );
