@@ -1,41 +1,74 @@
-//import { useState } from 'react';
+import React, { useState } from 'react';
 import styles from './NewPost.module.css';
-import { useState } from 'react';
 
 function NewPost(props) {
   const [author, setAuthor] = useState('');
-  const [coauthor, setCoauthor] = useState('');
+  const [ingredients, setIngredients] = useState([{ name: '', amount: '' }]);
 
   const authorChangeHandler = (event) => {
     setAuthor(event.target.value);
-    props.onNameChange(event);
   };
 
-  const coauthorChangeHandler = (event) => {
-    setCoauthor(event.target.value);
-    props.onMsgChange(event);
+  const ingredientChangeHandler = (index, field, value) => {
+    const newIngredients = ingredients.map((ingredient, i) => {
+      if (i === index) {
+        return { ...ingredient, [field]: value };
+      }
+      return ingredient;
+    });
+    setIngredients(newIngredients);
   };
+
+  const addIngredientHandler = () => {
+    setIngredients([...ingredients, { name: '', amount: '' }]);
+  };
+
+  const removeIngredientHandler = (index) => {
+    setIngredients(ingredients.filter((_, i) => i !== index));
+  };
+
   const onSubmitHandler = (event) => {
     event.preventDefault();
     const postData = {
-      name: event.target.name.value,
-      body: event.target.body.value
+      author,
+      ingredients: ingredients.filter(ing => ing.name && ing.amount)
     };
     props.onSubmit(postData);
   };
 
   return (
-    <div className={styles.newPostContainer} >
+    <div className={styles.newPostContainer}>
       <form className={styles.newPostForm} onSubmit={onSubmitHandler}>
         <p>
-          <label htmlFor="body">Text</label>
-          <textarea name="body" id="body" required rows={3} onChange={coauthorChangeHandler}/>
+          <label htmlFor="author">Your name</label>
+          <input 
+            type="text" 
+            id="author" 
+            required 
+            value={author} 
+            onChange={authorChangeHandler} 
+          />
         </p>
-        
-        <p>
-          <label htmlFor="name">Your name</label>
-          <input type="text" id="name" required onChange={authorChangeHandler}/>
-        </p>
+        {ingredients.map((ingredient, index) => (
+          <div key={index} className={styles.ingredientInputs}>
+            <input
+              type="text"
+              placeholder="Ingredient name"
+              value={ingredient.name}
+              onChange={(e) => ingredientChangeHandler(index, 'name', e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Amount"
+              value={ingredient.amount}
+              onChange={(e) => ingredientChangeHandler(index, 'amount', e.target.value)}
+              required
+            />
+            <button type="button" onClick={() => removeIngredientHandler(index)}>Remove</button>
+          </div>
+        ))}
+        <button type="button" onClick={addIngredientHandler}>Add Ingredient</button>
         <button type="submit">Submit</button>
       </form>
     </div>

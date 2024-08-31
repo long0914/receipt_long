@@ -1,27 +1,20 @@
-
-import PropTypes from 'prop-types';
+import React from 'react';
 import styles from './Post.module.css';
 
-
-function random(){
-  return Math.floor(Math.random() * 5);
-}
-
-const nameList = ['Alice', 'Bob', 'Charlie', 'David', 'Eve'];
-
-function Post(props) {
+function Post({ author, ingredients }) {
   return (
     <div className={styles.post}>
-      <p>{nameList[0]} {props.author}</p>
-      <p>{nameList[1]} {props.coauthor}</p>
-      <p>{nameList[random()]} {props.coauthor}</p>
+      <h2>{author}'s Recipe</h2>
+      <h3>Ingredients:</h3>
+      <ul>
+        {ingredients.map((ingredient, index) => (
+          <li key={index}>
+            {ingredient.name}: {ingredient.amount}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
-
-Post.propTypes = {
-  coauthor: PropTypes.string,
-  author: PropTypes.string
-};
 
 export default Post;
