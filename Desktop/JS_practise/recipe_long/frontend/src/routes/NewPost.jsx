@@ -34,6 +34,9 @@ function NewPost(props) {
       ingredients: ingredients.filter(ing => ing.name && ing.amount)
     };
     props.onSubmit(postData);
+    // Reset form after submission
+    setAuthor('');
+    setIngredients([{ name: '', amount: '' }]);
   };
 
   return (

@@ -8,51 +8,67 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/vue-mongo')
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch(err => console.error('MongoDB connection error:', err));
+mongoose.connect('mongodb://localhost:27017/recipe-board', { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true 
+})
+.then(() => console.log('MongoDB connected successfully'))
+.catch(err => {
+  console.error('MongoDB connection error:', err);
+  console.log('Using fallback in-memory storage');
+  // Implement fallback storage here if needed
+});
 
-// Define a schema for your data
-const DataSchema = new mongoose.Schema({
-  id: Number,
-  status: String,
-  year: Number,
-  resource_url: String,
-  uri: String,
-  artists: Array,
-  artists_sort: String,
-  labels: Array,
-  companies: Array,
-  formats: Array,
-  data_quality: String,
-  community: Object,
-  format_quantity: Number,
-  date_added: String,
-  date_changed: String,
-  num_for_sale: Number,
-  lowest_price: Number,
-  master_id: Number,
-  master_url: String,
-  title: String,
-  country: String,
-  released: String,
-  notes: String,
-  released_formatted: String,
-  identifiers: Array,
-  videos: Array,
+// Add event listeners for connection
+mongoose.connection.on('connected', () => {
+  console.log('Mongoose connected to db');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.log('Mongoose connection error: ' + err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('Mongoose disconnected');
+});
+
+
+
+
+// Define a schema for your posts
+const PostSchema = new mongoose.Schema({
+  author: String,
+  ingredients: [{
+    name: String,
+    amount: String
+  }],
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 // Create a model from the schema
-const DataModel = mongoose.model('Data', DataSchema);
+const PostModel = mongoose.model('Post', PostSchema);
 
-// API route to add data
-app.post('/addData', async (req, res) => {
-  const data = new DataModel(req.body);
+// API route to add a new post
+app.post('/api/posts', async (req, res) => {
+  const post = new PostModel(req.body);
   try {
-    await data.save();
-    res.sendStatus(200);
+    await post.save();
+    res.status(201).json(post);
   } catch (error) {
-    res.sendStatus(500);
+    res.status(500).json({ error: 'Error saving post' });
+  }
+});
+
+// API route to get all posts
+app.get('/api/posts', async (req, res) => {
+  try {
+    const posts = await PostModel.find().sort({ createdAt: -1 });
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching posts' });
   }
 });
 
